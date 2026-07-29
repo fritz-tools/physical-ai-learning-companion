@@ -62,6 +62,66 @@ Not imported like a Word document.
 
 It **composed** one scene from several sources.
 
+### Variants
+Why Variants Exist
+
+Variants allow an asset creator to package multiple approved versions of an asset inside a single asset. Instead of creating separate files for each version, downstream users simply choose from a predefined set of options.
+
+Key Insight
+
+Variants are primarily a collaboration feature, not just a modeling feature.
+Variant Sets
+
+A Variant Set is a named collection of choices.
+
+Example:
+
+State
+• Open
+• Closed
+• Damaged
+
+A scene selects one option instead of creating separate assets.
+
+Who Owns Variants
+
+Official Variants are generally created and maintained by the asset team because they represent reusable choices that any downstream project may need.
+
+### Overrides
+
+If I need a customization only for my own scene, I usually author an override instead of modifying the original asset.
+
+Overrides allow me to express my own opinions without changing the shared asset.
+
+Author an override: Create a new opinion in my own layer that changes how an existing asset appears or behaves in my specific context, without modifying the original asset.
+
+### Overrides vs. Variants
+
+Override
+
+Local to one scene or context.
+Authored by a downstream user.
+Does not modify the original asset.
+
+Variant
+
+Part of the asset itself.
+Created for reuse.
+Can be selected by many downstream users.I now understand the difference.
+
+Promotion Path:
+a useful override can later become an official Variant.
+
+Workflow:
+
+Override
+        ↓
+Team adopts it
+        ↓
+Asset team promotes it
+        ↓
+Official Variant
+
 
 ## USD Composition
 ### Why Composition Matters
@@ -69,6 +129,20 @@ It **composed** one scene from several sources.
 This ability to compose a scene from multiple sources is one of OpenUSD's core strengths.
 
 Different files can contribute different pieces of information while OpenUSD presents the result as one composed Stage.
+
+### Composition Mindset:
+
+One of the fundamental ideas of OpenUSD.
+
+Instead of asking:
+
+"Should I make another copy of this asset?"
+
+ ask:
+
+"Can I express this as another layer of opinions?"
+
+This is one of the reasons OpenUSD enables many teams to collaborate on the same assets without constantly duplicating work.
 
 ## Python for OpenUSD
 ### Programmatically Building a Stage
