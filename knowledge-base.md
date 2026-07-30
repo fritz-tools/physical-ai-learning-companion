@@ -3,11 +3,19 @@ https://github.com/fritz-tools/physical-ai-learning-companion
 # Physical AI Knowledge Base
 
 ## OpenUSD Foundations
+
 ### Stage
 
 A Stage is the complete scene that OpenUSD presents to you.
 
 A Stage does not have to come from one file. OpenUSD can combine information from multiple USD files/layers to create the Stage.
+
+### Scenegraph
+The scenegraph is the hierarchical organization of all Prims in a USD stage.
+Each Prim occupies a unique location in the scenegraph, identified by its namespace (Prim path).
+Parent-child relationships in the scenegraph are created by Prim paths, not by Prim types.
+
+
 
 ### Composing Multiple Layers into One Stage
 
@@ -50,7 +58,6 @@ The final Stage becomes:
 
 This is the composed result.
 
-### The Big Idea
 
 OpenUSD merged the information from multiple files into one scene.
 
@@ -95,7 +102,7 @@ Overrides allow me to express my own opinions without changing the shared asset.
 
 Author an override: Create a new opinion in my own layer that changes how an existing asset appears or behaves in my specific context, without modifying the original asset.
 
-### Overrides vs. Variants
+#### Overrides vs. Variants
 
 Override
 
@@ -122,6 +129,157 @@ Asset team promotes it
         ↓
 Official Variant
 
+### Prims
+A prim is a node in a scenegraph.
+Think of every Prim as having four big pieces of information:
+
+- Where is it?:
+/Geometry/Shelves/Shelf01
+- What is it?:
+Xform
+- What values does it have?:
+size, translate, visibility, color... (Attributes)
+- What other Prims is it connected to?:
+targets, materials, skeletons... (Relationships)
+
+#### Prim Types
+A Typed Prim is a Prim that has been assigned a type.
+- A Prim: (something that exists in the scenegraph)
+- A typed Prim: (a Prim with a specific schema/type like Sphere, Cube, Xform, Camera, etc.)
+For example:
+
+/
+└── Warehouse
+
+might simply be an organizational Prim.
+
+Whereas:
+
+/
+└── Warehouse
+    └── Camera01 (Camera)
+
+is a Prim that OpenUSD understands as a camera.
+You'll probably have something like:
+
+/
+└── Museum
+    ├── Geometry
+    ├── Lighting
+    ├── Cameras
+    └── Metadata
+
+Some of those Prims are there just to organize the scene.
+
+Others represent specific things with behavior and properties, like cameras or lights.
+
+That's why OpenUSD separates "there is a Prim here" from "this Prim is a Sphere/Camera/Xform/etc."
+
+
+Think of it this way:
+
+stage.DefinePrim("/hello")
+stage.DefinePrim("/world", "Sphere")
+
+
+is not saying:
+
+Create a Prim called world, then put a Sphere inside it.
+
+It's saying:
+
+Create a Prim called world whose type is Sphere.
+So the scenegraph looks like this:
+
+/
+├── hello
+└── world (type = Sphere)
+
+not
+
+/
+├── hello
+└── world
+    └── Sphere
+
+* Not every Prim represents visible geometry.
+
+Some Prims are used:
+
+to organize the scene (Xform is a common example),
+to group other Prims,
+to hold metadata,
+or simply to act as containers.
+
+### Scope Vs XForm
+
+Scope vs. Xform
+Scope is for organization only.
+Xform organizes and provides a transform that affects all of its children.
+
+/ (Pseudoroot) Automatically generated
+├── Geometry   (scope) The Purpose of a scope is to organize prims
+│   ├── Shelves (XForm)
+        ├──Shelf1
+        ├──Shelf2
+│   ├── Robots
+        ├──Robot1
+        ├──Robot2
+├── Cameras
+│   ├── Camera1
+│   └── Camera2
+└── Lights
+
+A Prim has lots of properties besides its name:
+
+Name: world
+Type: Sphere
+Transform
+Visibility
+Attributes
+RelationshipsA Prim has lots of properties besides its name:
+
+    Name: world
+
+    Type: Sphere
+
+    Transform
+
+    Visibility
+
+    Attributes
+
+    Relationships
+
+    Metadata
+
+
+
+
+
+
+
+### Hierarchy from Prim paths
+Hierarchy is created by a Prim's path, not by its type.
+Parent-child relationships come from the namespace.
+* Prims can be reorganized after they're created by reparenting them under a new parent.
+
+### NameSpace
+A namespace is the hierarchical naming system used to organize and locate Prims within a USD stage.
+
+A Prim's namespace is expressed as its namepath, for example:
+
+/Geometry/Shelves/Crate001
+
+
+#### Scenegraph Editing
+Reparenting changes a Prim's namespace path.
+Changing a Prim's path is similar to moving a referenced asset in a DAM or InDesign project—anything using the old path must be updated
+Reparenting changes a Prim's namespace path.
+Changing a Prim's path is similar to moving a referenced asset in a DAM or InDesign project—anything using the old path must be updated
+
+
+
 
 ## USD Composition
 ### Why Composition Matters
@@ -129,6 +287,8 @@ Official Variant
 This ability to compose a scene from multiple sources is one of OpenUSD's core strengths.
 
 Different files can contribute different pieces of information while OpenUSD presents the result as one composed Stage.
+
+
 
 ### Composition Mindset:
 
