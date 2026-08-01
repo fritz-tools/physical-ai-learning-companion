@@ -142,6 +142,14 @@ size, translate, visibility, color... (Attributes)
 - What other Prims is it connected to?:
 targets, materials, skeletons... (Relationships)
 
+Prim
+│
+├── Namespace
+├── Type
+└── Properties
+      ├── Attributes
+      └── Relationships
+
 #### Prim Types
 A Typed Prim is a Prim that has been assigned a type.
 - A Prim: (something that exists in the scenegraph)
@@ -237,26 +245,65 @@ Type: Sphere
 Transform
 Visibility
 Attributes
-RelationshipsA Prim has lots of properties besides its name:
+Metadata
 
-    Name: world
+* mental model:
 
-    Type: Sphere
+Prim
+├── Namespace
+├── Type
+└── Properties
+      ├── Attributes
+      │      size = 100
+      │      color = brown
+      │      visibility = inherited
+      │
+      └── Relationships
+             (links to other Prims)
 
-    Transform
+### Attributes
+An attribute is a named value, with a defined data type, stored on a Prim.
 
-    Visibility
+Examples include visibility, display color, extent, radius, size, mass, and transform values. Attributes can also have different values over time, which is how USD supports animation.
 
-    Attributes
+### Retrieving Properties of a Prim
 
-    Relationships
+OpenUSD documentation states "Properties are the other kind of namespace object"
+The important part is simply:
 
-    Metadata
+Every Prim can have properties.
 
+And there are only two kinds of properties:
 
+Properties
+├── Attributes
+└── Relationships
 
+What does it mean that it's "another kind of namespace object"? 
+We already know a Prim has a namespace.
 
+For example:
 
+/Geometry/Crates/Crate001
+
+That path exists because the Prim lives in the namespace.
+
+If we imagine the crate has an attribute called size.
+That attribute also has a path.
+
+It isn't just called size.
+
+It actually lives under the Prim.
+
+Conceptually, its full path is:
+
+/Geometry/Crates/Crate001.size
+
+And another attribute would be:
+
+/Geometry/Crates/Crate001.color 
+
+* more notes in retrieving properties under # Python for OpenUSD section below 
 
 
 ### Hierarchy from Prim paths
@@ -271,8 +318,8 @@ A Prim's namespace is expressed as its namepath, for example:
 
 /Geometry/Shelves/Crate001
 
-
-#### Scenegraph Editing
+* To retrieve the properties of a prim read below under
+### Scenegraph Editing
 Reparenting changes a Prim's namespace path.
 Changing a Prim's path is similar to moving a referenced asset in a DAM or InDesign project—anything using the old path must be updated
 Reparenting changes a Prim's namespace path.
@@ -315,6 +362,140 @@ Python can create the prims, add references to existing USD assets, and set thei
 
 This means Python is useful not because every USD scene needs to be built with code, but because code can automate repetitive or rule-based scene assembly.
 
+* The distinction between generic vs. typed APIs is fundamentally a USD API design concept, but I'm learning it through Python, so I'll put it here.
+Why Use Typed APIs?
+Use typed APIs when you already know what kind of Prim you are creating.
+
+### Typed APIs 
+They provide schema-specific methods and make your code clearer and safer.
+
+- Usd provides generic APIs that work with any Prim.
+- UsdGeom provides type-specific APIs for geometry and transforms.
+- stage.DefinePrim() returns a generic Usd.Prim.
+- UsdGeom.Cube.Define() returns a typed UsdGeom.Cube.
+
+### Attributes & Python
+
+The OpenUSD tutorial page introduces the basic Python pattern:
+
+sphere.GetRadiusAttr().Get()
+
+I'm breaking it down in two parts:
+
+sphere.GetRadiusAttr()
+
+means:
+Give me the sphere’s radius attribute object.
+
+Then:
+
+.Get()
+
+means:
+Give me the current value stored in that attribute.
+
+Similarly:
+
+sphere.GetRadiusAttr().Set(100.0)
+
+means:
+Find the radius attribute and set its value to 100.0.
+
+### From OpenUSD Tutorial: Working With Python
+
+"To work with attributes in OpenUSD, we will generally use schema-specific APIs. Each schema-specific API has a function to grab its own attributes. Review the following examples to learn more."
+
+"While there's also a dedicated UsdAttribute API..."
+For example:
+prim.GetAttribute("size")
+You're saying:
+
+"Find the attribute named size."
+
+This works with any attribute.
+Then the tutorial says:
+
+"...it's preferred to use the schema-specific methods..."
+
+This means if you're working with a known schema like Cube, use the methods that Cube provides.
+
+Instead of:
+
+prim.GetAttribute("size")
+
+write:
+
+cube.GetSizeAttr()
+
+The difference is
+
+The first one uses a string:
+
+"size"
+The second one uses a dedicated method:
+
+GetSizeAttr()
+
+Why is it more clear?
+
+Imagine you open this code six months from now.
+
+Which tells you more?
+
+prim.GetAttribute("size")
+
+or
+
+cube.GetSizeAttr()
+
+The second one immediately tells you:
+
+this object is a Cube
+we're accessing its size attribute
+
+
+* For Prims, we use /:
+
+/Geometry/Crates/Crate001
+
+For properties, USD uses a dot (.) after the Prim path:
+
+/Geometry/Crates/Crate001.size
+/Geometry/Crates/Crate001.color
+/Geometry/Crates/Crate001.visibility
+
+### Retrieving Properties
+
+If you ask:
+
+prim.GetPropertyNames()
+
+you're asking:
+
+"Tell me the labels on the folders."
+
+Result:
+
+size
+color
+visibility
+
+You only get the names.
+
+If you ask:
+
+prim.GetProperties()
+
+you're asking:
+
+"Give me the actual folders."
+
+Now you receive the property objects themselves.
+
+Those property objects let you inspect attributes or relationships.
+
+
+
 ## Omniverse
 
 ## Isaac Sim
@@ -322,5 +503,4 @@ This means Python is useful not because every USD scene needs to be built with c
 ## GitHub
 
 ## Glossary
-
 ## Questions to Revisit
