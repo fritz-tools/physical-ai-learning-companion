@@ -306,6 +306,47 @@ And another attribute would be:
 * more notes in retrieving properties under # Python for OpenUSD section below 
 
 
+
+
+
+
+### Fallback values
+
+Imagine we create a brand-new sphere and never write:
+
+double radius = 10
+
+we just create the sphere.
+
+Then we ask:
+
+sphere.GetRadiusAttr().Get()
+
+We might expect:
+
+"There is no radius."
+
+Instead, USD says:
+
+"The Sphere schema defines a default radius."
+
+So it returns that default value.
+The Sphere schema says:
+
+"If nobody specifies a radius, assume this default."
+
+When you ask for an attribute's value, USD figures out the correct answer.
+Sometimes that answer comes from:
+
+a value you authored
+
+Sometimes it comes from:
+
+a fallback defined by the schema
+
+there are many places USD can get a value from. "Value resolution" is the process of deciding which one wins.
+
+
 ### Hierarchy from Prim paths
 Hierarchy is created by a Prim's path, not by its type.
 Parent-child relationships come from the namespace.
@@ -326,6 +367,14 @@ Reparenting changes a Prim's namespace path.
 Changing a Prim's path is similar to moving a referenced asset in a DAM or InDesign project—anything using the old path must be updated
 
 
+### Relationships
+
+- A relationship is a property that creates a connection between one Prim and one or more other Prims.
+- Relationships answer the question: "What is this Prim connected to?"
+- Unlike attributes, relationships do not store values. They store target Prim paths.
+- Relationships are used to express associations, such as a material bound to a mesh or a camera targeting an object.
+- Relationships are properties, just like attributes, and are namespace objects that belong to a Prim.
+- Relationships can be queried and modified through the USD API.
 
 
 ## USD Composition
@@ -464,7 +513,7 @@ For properties, USD uses a dot (.) after the Prim path:
 /Geometry/Crates/Crate001.color
 /Geometry/Crates/Crate001.visibility
 
-### Retrieving Properties
+### Retrieving Properties of a Prim
 
 If you ask:
 
@@ -494,8 +543,50 @@ Now you receive the property objects themselves.
 
 Those property objects let you inspect attributes or relationships.
 
+* We interact with attributes through the UsdAttribute API.
+
+sphere_prim.GetRadiusAttr().Get()
+
+We can use the Get() method for the radius, displayColor, and extent attributes.
+
+### Getting Attribute Values
+We interact with attributes through the UsdAttribute API.
+
+GetRadiusAttr() will return a UsdAttribute object that can be used to modify the attribute. Which means it will not retrieve the value of the attribute. To get the value of an attribute, use the Get() method.
+
+For example, to get the value of the radius attribute, we would use the following snippet.
+
+sphere_prim.GetRadiusAttr().Get()
+
+* Since we have not explicitly authored any attribute values, Get() will return the fallback value that was defined in the schema.
+
+### Setting Attribute Values
+
+Here is an example of setting a value to the radius attribute.
+
+sphere_prim.GetRadiusAttr().Set(100.0)
+
+When getting attribute values, USD will apply value resolution since we authored a default value. The Get() method will retrieve the value of the attribute. To set the values, we use the Set() method. This will resolve to the authored value rather than the fallback value from the sphere schema.
+
+### Working with Relationships in Python
+
+Get the target paths of a relationship
+UsdRelationship.GetTargets()
+
+Set the target paths for a relationship
+UsdRelationship.SetTargets()
+
+Add a new target path to a relationship
+UsdRelationship.AddTarget()
+
+Remove a target path from a relationship
+UsdRelationship.RemoveTarget()
+
+* Relationships are properties that store one or more target paths. You can author a relationship with CreateRelationship, then later retrieve it with GetRelationship and inspect the targets with GetTargets.
 
 
+
+### Setting Properties 
 ## Omniverse
 
 ## Isaac Sim
