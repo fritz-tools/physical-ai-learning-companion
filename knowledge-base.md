@@ -17,119 +17,6 @@ Parent-child relationships in the scenegraph are created by Prim paths, not by P
 
 * The scenegraph should reflect how the object will be used, not just how it was modeled.
 
-
-### Composing Multiple Layers into One Stage
-
-OpenUSD can use multiple layers to build one Stage.
-
-For example, imagine multiple layers contribute information at the same location:
-
-    World
-    └── Geometry
-
-One layer might contribute a Cube:
-
-    World
-    └── Geometry
-        └── Cube
-
-Another might contribute a Sphere:
-
-    World
-    └── Geometry
-        └── Sphere
-
-When OpenUSD builds the Stage, it looks at the layers and notices that they refer to the same location:
-
-    World
-    └── Geometry
-
-Instead of making separate copies of World and Geometry, OpenUSD understands:
-
-> "They're all talking about the same place."
-
-So it combines their contributions.
-
-The final Stage becomes:
-
-    World
-    └── Geometry
-        ├── Cube
-        └── Sphere
-
-This is the composed result.
-
-
-OpenUSD merged the information from multiple files into one scene.
-
-Not copied.
-
-Not duplicated.
-
-Not imported like a Word document.
-
-It **composed** one scene from several sources.
-
-### Variants
-Why Variants Exist
-
-Variants allow an asset creator to package multiple approved versions of an asset inside a single asset. Instead of creating separate files for each version, downstream users simply choose from a predefined set of options.
-
-Key Insight
-
-Variants are primarily a collaboration feature, not just a modeling feature.
-Variant Sets
-
-A Variant Set is a named collection of choices.
-
-Example:
-
-State
-• Open
-• Closed
-• Damaged
-
-A scene selects one option instead of creating separate assets.
-
-* Who Owns Variants
-
-Official Variants are generally created and maintained by the asset team because they represent reusable choices that any downstream project may need.
-
-### Overrides
-
-If I need a customization only for my own scene, I usually author an override instead of modifying the original asset.
-
-Overrides allow me to express my own opinions without changing the shared asset.
-
-Author an override: Create a new opinion in my own layer that changes how an existing asset appears or behaves in my specific context, without modifying the original asset.
-
-#### Overrides vs. Variants
-
-Override
-
-Local to one scene or context.
-Authored by a downstream user.
-Does not modify the original asset.
-
-Variant
-
-Part of the asset itself.
-Created for reuse.
-Can be selected by many downstream users.I now understand the difference.
-
-Promotion Path:
-a useful override can later become an official Variant.
-
-Workflow:
-
-Override
-        ↓
-Team adopts it
-        ↓
-Asset team promotes it
-        ↓
-Official Variant
-
 ### Prims
 A prim is a node in a scenegraph.
 Think of every Prim as having four big pieces of information:
@@ -220,6 +107,144 @@ to group other Prims,
 to hold metadata,
 or simply to act as containers.
 
+
+
+### Composing Multiple Layers into One Stage
+
+OpenUSD can use multiple layers to build one Stage.
+
+For example, imagine multiple layers contribute information at the same location:
+
+    World
+    └── Geometry
+
+One layer might contribute a Cube:
+
+    World
+    └── Geometry
+        └── Cube
+
+Another might contribute a Sphere:
+
+    World
+    └── Geometry
+        └── Sphere
+
+When OpenUSD builds the Stage, it looks at the layers and notices that they refer to the same location:
+
+    World
+    └── Geometry
+
+Instead of making separate copies of World and Geometry, OpenUSD understands:
+
+> "They're all talking about the same place."
+
+So it combines their contributions.
+
+The final Stage becomes:
+
+    World
+    └── Geometry
+        ├── Cube
+        └── Sphere
+
+This is the composed result.
+
+
+OpenUSD merged the information from multiple files into one scene.
+
+Not copied.
+
+Not duplicated.
+
+Not imported like a Word document.
+
+It **composed** one scene from several sources.
+
+### Variants
+Why Variants Exist
+
+Variants allow an asset creator to package multiple approved versions of an asset inside a single asset. Instead of creating separate files for each version, downstream users simply choose from a predefined set of options.
+
+Key Insight
+
+Variants are primarily a collaboration feature, not just a modeling feature.
+Variant Sets
+
+A Variant Set is a named collection of choices.
+
+Example:
+
+State
+• Open
+• Closed
+• Damaged
+
+A scene selects one option instead of creating separate assets.
+
+* Who Owns Variants
+
+Official Variants are generally created and maintained by the asset team because they represent reusable choices that any downstream project may need.
+
+- Asset: what the reusable crate is
+- Variant: an authored choice, such as size
+- Occurrence: a particular crate in the warehouse
+- State: what that occurrence is doing right now, such as lid open or being carried
+
+* A Size variant shouldn't just make the crate look bigger.
+
+It should make it a bigger crate.
+
+That means when you choose:
+
+Size = Large
+
+everything that defines "large" changes together:
+
+Geometry
+Dimensions
+Mass
+Collision geometry
+Center of mass (if needed)
+Any default grasp points
+Any default physics properties that depend on size
+
+### Overrides
+
+If I need a customization only for my own scene, I usually author an override instead of modifying the original asset.
+
+Overrides allow me to express my own opinions without changing the shared asset.
+
+Author an override: Create a new opinion in my own layer that changes how an existing asset appears or behaves in my specific context, without modifying the original asset.
+
+#### Overrides vs. Variants
+
+Override
+
+Local to one scene or context.
+Authored by a downstream user.
+Does not modify the original asset.
+
+Variant
+
+Part of the asset itself.
+Created for reuse.
+Can be selected by many downstream users.I now understand the difference.
+
+Promotion Path:
+a useful override can later become an official Variant.
+
+Workflow:
+
+Override
+        ↓
+Team adopts it
+        ↓
+Asset team promotes it
+        ↓
+Official Variant
+
+
 ### Scope Vs XForm
 
 Scope vs. Xform
@@ -262,10 +287,7 @@ Prim
       └── Relationships
              (links to other Prims)
 
-### Attributes
-An attribute is a named value, with a defined data type, stored on a Prim.
 
-Examples include visibility, display color, extent, radius, size, mass, and transform values. Attributes can also have different values over time, which is how USD supports animation.
 
 ### Retrieving Properties of a Prim
 
@@ -307,7 +329,10 @@ And another attribute would be:
 * more notes in retrieving properties under # Python for OpenUSD section below 
 
 
+### Attributes
+An attribute is a named value, with a defined data type, stored on a Prim.
 
+Examples include visibility, display color, extent, radius, size, mass, and transform values. Attributes can also have different values over time, which is how USD supports animation.
 
 
 
@@ -360,7 +385,9 @@ A Prim's namespace is expressed as its namepath, for example:
 
 /Geometry/Shelves/Crate001
 
-* To retrieve the properties of a prim read below under
+* To retrieve the properties of a prim read below under Python for openusd section
+
+
 ### Scenegraph Editing
 Reparenting changes a Prim's namespace path.
 Changing a Prim's path is similar to moving a referenced asset in a DAM or InDesign project—anything using the old path must be updated
