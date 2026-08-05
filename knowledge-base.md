@@ -15,6 +15,7 @@ The scenegraph is the hierarchical organization of all Prims in a USD stage.
 Each Prim occupies a unique location in the scenegraph, identified by its namespace (Prim path).
 Parent-child relationships in the scenegraph are created by Prim paths, not by Prim types.
 
+* The scenegraph should reflect how the object will be used, not just how it was modeled.
 
 
 ### Composing Multiple Layers into One Stage
@@ -376,6 +377,124 @@ Changing a Prim's path is similar to moving a referenced asset in a DAM or InDes
 - Relationships are properties, just like attributes, and are namespace objects that belong to a Prim.
 - Relationships can be queried and modified through the USD API.
 
+## OpenUSD Asset Pipeline
+
+OpenUSD Asset Workflow
+
+1. Source Asset
+   • DCC applications
+   • Native file formats (.blend, .ma, .hip)
+
+2. Asset Preparation
+   • Naming
+   • Scale
+   • Pivot
+   • Materials
+
+3. Asset Publishing
+   • Export to USD
+   • Validation
+   • Published asset
+
+4. Asset Library
+   • Organization
+   • Canonical assets
+   • Versioning (later)
+
+5. Asset Reuse
+   • References
+   • Instances
+   • Assemblies
+
+### Asset Preparation
+
+Purpose: Prepare a 3D model so it becomes a predictable, reliable, reusable OpenUSD asset. Not enough to simply have the model look correct.
+
+- Asset boundary: Decide what the reusable asset is (e.g., one crate, not an entire warehouse).
+- Scale: Use correct real-world dimensions. Later physics, robots, collisions, navigation all assume objects have realistic dimensions
+- Pivot (origin): Place the local origin appropriately for movement and placement. Pivot determines how an object moves and rotates when placed into a world
+- Naming: Use clear, consistent object names.
+- Transforms: Apply/clean transforms before publishing.e.g. if the model has a rotation transform it will always be placed rotated. 
+- Materials: Assign default materials.
+- Hierarchy: Organize the model logically for reuse. Assess whether you need to leave room for growth in your streucture
+- Reusability: Ask "Could someone else place this asset into another project without editing it?
+
+
+
+
+### From 3D Model to Reusable OpenUSD Asset
+
+1. Create the source asset
+
+Model the object in a DCC (Digital Content Creation) application such as Blender.
+
+Example:
+
+crate.blend
+
+The native project file (.blend) is the artist's editable working file. It contains Blender-specific information such as modifiers, collections, cameras, lights, and other editing data.
+
+2. Prepare the asset
+
+Before exporting:
+
+Apply the correct scale.
+Set the object's origin (pivot).
+Organize and name objects clearly.
+Assign materials.
+Remove unnecessary objects.
+Ensure the asset is ready for reuse.
+
+3. Export to USD
+
+Export the asset from Blender as a USD file.
+
+Example:
+
+assets/
+    crate/
+        crate.usda
+
+The exported crate.usda becomes the reusable OpenUSD asset used by the rest of the pipeline.
+
+4. Validate the exported asset
+
+Open the USD asset in a USD-native application such as:
+
+usdview
+Omniverse USD Composer
+Isaac Sim
+
+Verify:
+
+hierarchy
+transforms
+geometry
+materials
+naming
+default prim
+overall asset organization
+
+5. Publish the asset
+
+Once validated, crate.usda becomes the canonical crate asset.
+
+Other scenes should reference this file instead of creating new crate geometry.
+
+6. Build worlds using references
+
+Later, a warehouse scene can reference the asset many times:
+
+crate.usda
+        │
+        ├──► Crate_001
+        ├──► Crate_002
+        ├──► Crate_003
+        └──► ...
+
+Each occurrence has its own position, orientation, and metadata while sharing the same underlying asset.
+
+
 
 ## USD Composition
 ### Why Composition Matters
@@ -399,6 +518,172 @@ Instead of asking:
 "Can I express this as another layer of opinions?"
 
 This is one of the reasons OpenUSD enables many teams to collaborate on the same assets without constantly duplicating work.
+
+### The main idea behind USD composition
+
+Imagine the example warehouse warehouse.usda. It is not a 3D model in the traditional sense.
+
+It's much closer to an assembly recipe.
+
+It says things like:
+
+Place a shelf here.
+Place another shelf over there.
+Place a crate on this shelf.
+Place another crate here.
+Rotate this one.
+Translate that one.
+
+Most of the actual geometry lives somewhere else, in the reusable assets.
+
+That's a very different way of thinking than a traditional monolithic 3D scene, and it's one of the reasons OpenUSD scales so well.
+
+### Minimum Reusable Asset
+
+Imagine you might eventually have 1,000 crates spread across many museum warehouses.
+
+Which of these would you make into a reusable asset?
+
+A single crate
+A shelf that permanently includes several crates
+An entire warehouse
+Some combination of the above?
+
+The answer should be based on what needs to be independently manipulated in the future
+
+### Asset Composition
+
+Atomic assets: crate, shelf, wall, floor, pallet, camera mount, etc.
+Assemblies: loaded shelf, warehouse aisle, entire warehouse.
+Top-level world: the museum warehouse digital twin
+
+### From Canonical Asset to Occurrence 
+
+crate.usda in this example is the reusable asset definition or canonical asset
+
+crate.usda
+└── /Crate
+    └── Geometry
+
+Crate_001 is a prim inside another stage, such as the warehouse stage.
+
+Warehouse.usda
+└── /World
+    └── /Warehouse
+        └── /Crates
+            └── /Crate_001
+
+
+Crate_001 gets its crate contents by referencing crate.usda.
+
+Step 1: Author crate.usda
+
+A simplified asset file could look like this:
+
+#usda 1.0
+(
+    defaultPrim = "Crate"
+)
+
+def Xform "Crate"
+{
+    def Cube "Geometry"
+    {
+        double size = 1
+    }
+}
+
+This file defines a reusable prim named:
+
+/Crate
+
+It contains the crate's shared information, currently just its geometry.
+
+The defaultPrim = "Crate" line tells OpenUSD:
+
+When another file references this asset without specifying a prim path, use /Crate.
+
+Step 2: Create a prim called Crate_001
+
+Inside Warehouse.usda, we author a new prim:
+
+def Xform "Crate_001"
+{
+}
+
+At this point, Crate_001 is only an empty Xform. It has a name and a location in the scenegraph, but no crate geometry.
+
+Step 3: Add the reference
+
+We add a reference from Crate_001 to crate.usda:
+
+def Xform "Crate_001" (
+    prepend references = @../../assets/crate/crate.usda@
+)
+{
+}
+
+OpenUSD then composes the referenced asset beneath that prim.
+
+Conceptually:
+
+crate.usda
+/Crate
+└── Geometry
+
+          referenced by
+
+Warehouse.usda
+/World/Warehouse/Crates/Crate_001
+└── Geometry
+
+The source prim was named /Crate, but it appears in the warehouse under the name and location of the referencing prim:
+
+/World/Warehouse/Crates/Crate_001
+
+That is how we go from the generic asset name Crate to the world-specific identity Crate_001.
+
+#### What is actually stored where?
+
+In crate.usda:
+
+The reusable definition
+
+geometry
+dimensions
+shared materials
+internal prim organization
+
+In Warehouse.usda:
+
+The occurrence in this particular world
+
+name: Crate_001
+position
+rotation
+warehouse location
+inventory identity
+instance-specific metadataWhat is actually stored where?
+
+In crate.usda:
+
+The reusable definition
+
+geometry
+dimensions
+shared materials
+internal prim organization
+
+In Warehouse.usda:
+
+The occurrence in this particular world
+
+name: Crate_001
+position
+rotation
+warehouse location
+inventory identity
+instance-specific metadata
 
 ## Python for OpenUSD
 ### Programmatically Building a Stage
@@ -586,12 +871,9 @@ UsdRelationship.RemoveTarget()
 
 
 
-### Setting Properties 
+
 ## Omniverse
 
 ## Isaac Sim
 
-## GitHub
 
-## Glossary
-## Questions to Revisit
