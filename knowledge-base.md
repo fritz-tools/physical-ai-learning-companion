@@ -91,7 +91,7 @@ State
 
 A scene selects one option instead of creating separate assets.
 
-Who Owns Variants
+* Who Owns Variants
 
 Official Variants are generally created and maintained by the asset team because they represent reusable choices that any downstream project may need.
 
@@ -420,150 +420,14 @@ Purpose: Prepare a 3D model so it becomes a predictable, reliable, reusable Open
 - Reusability: Ask "Could someone else place this asset into another project without editing it?
 
 
-
-
-### From 3D Model to Reusable OpenUSD Asset
-
-1. Create the source asset
-
-Model the object in a DCC (Digital Content Creation) application such as Blender.
-
-Example:
-
-crate.blend
-
-The native project file (.blend) is the artist's editable working file. It contains Blender-specific information such as modifiers, collections, cameras, lights, and other editing data.
-
-2. Prepare the asset
-
-Before exporting:
-
-Apply the correct scale.
-Set the object's origin (pivot).
-Organize and name objects clearly.
-Assign materials.
-Remove unnecessary objects.
-Ensure the asset is ready for reuse.
-
-3. Export to USD
-
-Export the asset from Blender as a USD file.
-
-Example:
-
-assets/
-    crate/
-        crate.usda
-
-The exported crate.usda becomes the reusable OpenUSD asset used by the rest of the pipeline.
-
-4. Validate the exported asset
-
-Open the USD asset in a USD-native application such as:
-
-usdview
-Omniverse USD Composer
-Isaac Sim
-
-Verify:
-
-hierarchy
-transforms
-geometry
-materials
-naming
-default prim
-overall asset organization
-
-5. Publish the asset
-
-Once validated, crate.usda becomes the canonical crate asset.
-
-Other scenes should reference this file instead of creating new crate geometry.
-
-6. Build worlds using references
-
-Later, a warehouse scene can reference the asset many times:
-
-crate.usda
-        │
-        ├──► Crate_001
-        ├──► Crate_002
-        ├──► Crate_003
-        └──► ...
-
-Each occurrence has its own position, orientation, and metadata while sharing the same underlying asset.
-
-
-
-## USD Composition
-### Why Composition Matters
-
-This ability to compose a scene from multiple sources is one of OpenUSD's core strengths.
-
-Different files can contribute different pieces of information while OpenUSD presents the result as one composed Stage.
-
-
-
-### Composition Mindset:
-
-One of the fundamental ideas of OpenUSD.
-
-Instead of asking:
-
-"Should I make another copy of this asset?"
-
- ask:
-
-"Can I express this as another layer of opinions?"
-
-This is one of the reasons OpenUSD enables many teams to collaborate on the same assets without constantly duplicating work.
-
-### The main idea behind USD composition
-
-Imagine the example warehouse warehouse.usda. It is not a 3D model in the traditional sense.
-
-It's much closer to an assembly recipe.
-
-It says things like:
-
-Place a shelf here.
-Place another shelf over there.
-Place a crate on this shelf.
-Place another crate here.
-Rotate this one.
-Translate that one.
-
-Most of the actual geometry lives somewhere else, in the reusable assets.
-
-That's a very different way of thinking than a traditional monolithic 3D scene, and it's one of the reasons OpenUSD scales so well.
-
-### Minimum Reusable Asset
-
-Imagine you might eventually have 1,000 crates spread across many museum warehouses.
-
-Which of these would you make into a reusable asset?
-
-A single crate
-A shelf that permanently includes several crates
-An entire warehouse
-Some combination of the above?
-
-The answer should be based on what needs to be independently manipulated in the future
-
-### Asset Composition
-
-Atomic assets: crate, shelf, wall, floor, pallet, camera mount, etc.
-Assemblies: loaded shelf, warehouse aisle, entire warehouse.
-Top-level world: the museum warehouse digital twin
-
 ### From Canonical Asset to Occurrence 
 
 crate.usda in this example is the reusable asset definition or canonical asset
 
-crate.usda
-└── /Crate
-    └── Geometry
+assets/
+    crate.usda
+        └── /Crate
+            └── Geometry
 
 Crate_001 is a prim inside another stage, such as the warehouse stage.
 
@@ -665,25 +529,233 @@ warehouse location
 inventory identity
 instance-specific metadataWhat is actually stored where?
 
-In crate.usda:
 
-The reusable definition
+#### From 3D Model to Reusable OpenUSD Asset
 
+1. Create the source asset
+
+Model the object in a DCC (Digital Content Creation) application such as Blender.
+
+Example:
+
+crate.blend
+
+The native project file (.blend) is the artist's editable working file. It contains Blender-specific information such as modifiers, collections, cameras, lights, and other editing data.
+
+2. Prepare the asset
+
+Before exporting:
+
+Apply the correct scale.
+Set the object's origin (pivot).
+Organize and name objects clearly.
+Assign materials.
+Remove unnecessary objects.
+Ensure the asset is ready for reuse.
+
+3. Export to USD
+
+Export the asset from Blender as a USD file.
+
+Example:
+
+assets/
+    crate/
+        crate.usda
+
+The exported crate.usda becomes the reusable OpenUSD asset used by the rest of the pipeline.
+
+4. Validate the exported asset
+
+Open the USD asset in a USD-native application such as:
+
+usdview
+Omniverse USD Composer
+Isaac Sim
+
+Verify:
+
+hierarchy
+transforms
 geometry
-dimensions
-shared materials
-internal prim organization
+materials
+naming
+default prim
+overall asset organization
 
-In Warehouse.usda:
+5. Publish the asset
 
-The occurrence in this particular world
+Once validated, crate.usda becomes the canonical crate asset.
 
-name: Crate_001
-position
-rotation
-warehouse location
-inventory identity
-instance-specific metadata
+Other scenes should reference this file instead of creating new crate geometry.
+
+6. Build worlds using references
+
+Later, a warehouse scene can reference the asset many times:
+
+crate.usda
+        │
+        ├──► Crate_001
+        ├──► Crate_002
+        ├──► Crate_003
+        └──► ...
+
+Each occurrence has its own position, orientation, and metadata while sharing the same underlying asset.
+
+### New Asset or Variant?
+
+New asset
+
+When someone would naturally say:
+
+"This is a different kind of thing."
+
+Examples:
+
+Wooden crate
+Metal crate
+Pallet
+Shelf
+Variant
+
+When someone would naturally say:
+
+"It's the same thing, but with a different option."
+
+Examples:
+
+Small crate
+Large crate
+Red crate
+Blue crate
+
+* Physical AI forces us to think like a roboticist:
+
+"Metal crate = a different physical object."
+
+Visual rendering perspective
+
+If your goal is a movie or game, maybe all you care about is appearance.
+
+Wood crate
+↓
+Change material
+↓
+Metal crate
+
+A variant could absolutely make sense.
+
+Physical AI perspective
+
+Now ask what a robot cares about.
+
+Does it care about the texture?
+
+Not very much.
+
+It cares about things like:
+
+weight
+center of mass
+friction
+collision shape
+stiffness
+whether magnets work
+whether it can be stacked safely
+how much force is required to lift it
+
+Now the "same-looking" object may behave completely differently.
+
+
+
+
+## USD Composition
+
+### Why Composition Matters
+
+This ability to compose a scene from multiple sources is one of OpenUSD's core strengths.
+
+Different files can contribute different pieces of information while OpenUSD presents the result as one composed Stage.
+
+
+
+### Composition Mindset:
+
+One of the fundamental ideas of OpenUSD.
+
+Instead of asking:
+
+"Should I make another copy of this asset?"
+
+ ask:
+
+"Can I express this as another layer of opinions?"
+
+This is one of the reasons OpenUSD enables many teams to collaborate on the same assets without constantly duplicating work.
+
+### The main idea behind USD composition
+
+Imagine the example warehouse warehouse.usda. It is not a 3D model in the traditional sense.
+
+It's much closer to an assembly recipe.
+
+It says things like:
+
+Place a shelf here.
+Place another shelf over there.
+Place a crate on this shelf.
+Place another crate here.
+Rotate this one.
+Translate that one.
+
+Most of the actual geometry lives somewhere else, in the reusable assets.
+
+That's a very different way of thinking than a traditional monolithic 3D scene, and it's one of the reasons OpenUSD scales so well.
+
+### Minimum Reusable Asset
+
+Imagine you might eventually have 1,000 crates spread across many museum warehouses.
+
+Which of these would you make into a reusable asset?
+
+A single crate
+A shelf that permanently includes several crates
+An entire warehouse
+Some combination of the above?
+
+The answer should be based on what needs to be independently manipulated in the future
+
+### Asset Composition
+
+Atomic assets: crate, shelf, wall, floor, pallet, camera mount, etc.
+Assemblies: loaded shelf, warehouse aisle, entire warehouse.
+Top-level world: the museum warehouse digital twin
+
+### ### Asset library
+- A project- or company-defined collection of reusable USD assets. An asset library is a project organization choice, not an OpenUSD requirement.
+
+### Relative paths
+- References that locate another USD asset relative to the referencing USD file.
+- Preferred for self-contained projects because the entire project can be moved without breaking references.
+"If I moved the entire project folder to another computer, would this still work?"
+If the answer is yes, it's probably a relative path.
+
+### Absolute paths
+- References that point to a fixed location on a specific computer or network.
+- Generally avoided for portable projects.
+
+### Self-contained project
+- A project that contains its own reusable assets (for example, `assets/crate.usda`) and references them using relative paths.
+
+### Shared asset library
+- A single canonical asset library shared by multiple projects.
+- Eliminates duplicate assets but requires shared infrastructure or asset management.
+
+### References live in the world
+- The reusable asset (`crate.usda`) lives in the asset library.
+- The **reference** to that asset lives inside the world or assembly USD file (for example, `warehouse.usda`).
+
+
 
 ## Python for OpenUSD
 ### Programmatically Building a Stage
