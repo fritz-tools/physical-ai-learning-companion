@@ -1,0 +1,302 @@
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "PaperBoxes"
+    {
+        def Xform "PaperBox_01" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_02" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_03" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_04" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_05" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_06" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_07" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_08" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_09" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, -0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_10" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, -0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_11" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, -0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_12" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, -0.32, 0.135)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_13" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_14" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_15" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_16" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_17" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_18" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_19" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_20" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_21" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, -0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_22" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, -0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_23" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, -0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_24" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, -0.32, 0.376)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_25" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_26" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_27" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_28" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_29" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, 0, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_30" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, 0, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_31" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, 0, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_32" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, 0, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_33" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.33, -0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_34" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (0.11, -0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_35" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.11, -0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Xform "PaperBox_36" (
+            prepend references = @../../3d_assets/warehouse_assets/paper_box_mint/box_paper_mint.usd@
+        )
+        {
+            double3 xformOp:translate = (-0.33, -0.32, 0.617)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+
+    def Xform "Pallet" (
+        prepend references = @../../3d_assets/warehouse_assets/wood_pallet/wood_pallet.usd@
+    )
+    {
+    }
+}
+
