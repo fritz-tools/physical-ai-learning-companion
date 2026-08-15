@@ -404,6 +404,105 @@ Changing a Prim's path is similar to moving a referenced asset in a DAM or InDes
 - Relationships are properties, just like attributes, and are namespace objects that belong to a Prim.
 - Relationships can be queried and modified through the USD API.
 
+### Payloads
+
+A reference says:
+
+“This prim is built using data from another USD asset.”
+
+A payload says something similar, but with one extra capability:
+
+“This prim can bring in this external USD data, and that data can be loaded or unloaded from the Stage.”
+
+In simpler terms:
+So the simplest distinction is:
+
+- reference = bring this asset in
+
+- payload = bring this asset in, but make it loadable/unloadable
+
+A payload itself isn’t the container. The prim is the container, and the payload is the instruction that says:
+
+“When this prim is loaded, bring in this external chunk of USD content here.”
+Imagine a warehouse with 10,000 complicated assets. OpenUSD may need to know that all those assets exist in the scenegraph, but you may not want all of their heavy geometry or physics data loaded into memory immediately.
+
+A payload gives OpenUSD a boundary around content that can be deferred.
+
+So think of a payload as a loadable package with a switch, not as the system that flips the switch.
+
+For example:
+
+Warehouse
+│
+├── Wing_A
+│   └── payload → detailed Wing A
+│
+└── Wing_B
+    └── payload → detailed Wing B
+
+OpenUSD gives us something conceptually like:
+
+Wing A: [LOAD] [UNLOAD]
+Wing B: [LOAD] [UNLOAD]
+
+But OpenUSD itself does not inherently say:
+
+“The robot got within 10 meters of Wing B, so load Wing B.”
+
+An application—or code you write could do that.
+
+So our imagined system could be built like this:
+
+Robot deep in Wing A
+
+Wing A → loaded
+Wing B → unloaded
+
+Robot approaches the doorway:
+
+Wing A → loaded
+Wing B → loaded
+
+Robot moves well into Wing B:
+
+Wing A → unloaded
+Wing B → loaded
+
+That is a perfectly reasonable use of payloads. The important distinction is that the payload provides the load/unload capability; our application logic determines when those changes happen.
+
+Mental model:
+
+Wing_B prim
+   ↓
+   payload switch
+   ↓
+wing_b.usd
+   ↓
+shelves + boxes + forklift + lights + etc.
+--------
+
+Similarly to how we added references to prims, we will use GetPayloads() and AddPayload() to add payloads to a prim.
+
+    Add the following code into the script:
+
+xform = UsdGeom.Xform.Define(stage, "/World/sm_bldgF_01")
+xform.GetPrim().GetPayloads().AddPayload("./sm_bldgF.usd")
+xform = UsdGeom.Xform.Define(stage, "/World/sm_bldgF_02")
+xform.GetPrim().GetPayloads().AddPayload("./sm_bldgF.usd")
+xform_api = UsdGeom.XformCommonAPI(xform)
+xform_api.SetTranslate(Gf.Vec3d(180, 0, 0))
+xform = UsdGeom.Xform.Define(stage, "/World/sm_bldgF_03")
+xform.GetPrim().GetPayloads().AddPayload("./sm_bldgF.usd")
+xform_api = UsdGeom.XformCommonAPI(xform)
+xform_api.SetTranslate(Gf.Vec3d(340, 0, 0))
+
+in this example we can see how after both _02 and _03 the lines:
+
+xform_api = UsdGeom.XformCommonAPI(xform) xform_api.SetTranslate(Gf.Vec3d(180, 0, 0))
+
+Serve the purpose of moving _02 180 on X
+
+
 ## OpenUSD Asset Pipeline
 
 OpenUSD Asset Workflow
