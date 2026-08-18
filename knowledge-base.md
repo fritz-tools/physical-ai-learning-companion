@@ -502,6 +502,97 @@ xform_api = UsdGeom.XformCommonAPI(xform) xform_api.SetTranslate(Gf.Vec3d(180, 0
 
 Serve the purpose of moving _02 180 on X
 
+### Encapsulation
+
+Encapsulation in OpenUSD means keeping an asset and its dependencies inside the same hierarchy boundary so they travel together when referenced or composed.
+
+It's very much an asset-boundary concept.
+
+If I make:
+
+PaperBox
+├── Geometry
+├── Materials
+└── Physics
+
+and later reference PaperBox, that's nicely self-contained.
+
+But if I make:
+
+PaperBox
+└── Geometry
+
+Materials
+└── Cardboard
+
+Physics
+└── BoxPhysics
+
+and the box's geometry depends on those things elsewhere in the hierarchy, then referencing only PaperBox risks leaving its dependencies behind.
+
+
+* A potential trap to notice: even the good asset can be referenced incorrectly.
+
+If the good asset is:
+
+World
+├── Cube
+└── RedMaterial
+
+and you reference:
+
+/World
+
+good — both come along.
+
+But if you target:
+
+/World/Cube
+
+then your reference boundary is now just:
+
+Cube
+
+The sibling RedMaterial is outside that boundary, so it does not come along. NVIDIA points this out in the exercise too.
+
+So there are really two lessons here:
+
+1. Structure the source asset correctly.
+2. Reference the correct prim in that asset.
+
+### Variants
+A variant set lets one prim have named alternative versions, with one version selected at a time.
+
+imagine one crate asset:
+
+Crate
+
+Instead of making three totally separate assets:
+
+Crate_Wood
+Crate_Metal
+Crate_Plastic
+
+you could have one Crate prim with a variant set:
+
+Crate
+└── materialVariant
+    ├── wood
+    ├── metal
+    └── plastic
+
+Then you choose:
+
+materialVariant = "wood"
+Only one variant in that variant set is selected at a time.
+
+A variant can change more than color, it can authoor different:
+
+- property values
+- materials
+- prims
+- scenegraph structure
+- even composition arcs such as references
 
 ## OpenUSD Asset Pipeline
 
